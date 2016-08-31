@@ -1,0 +1,29 @@
+version: '2'
+services:
+  wordpress:
+    image: wordpress:4.6.0-apache
+    ports:
+      - 8080:80
+    env_file:
+      - ./config/wordpress/dev.env
+    volumes:
+      - ./src:/var/www/html
+      - ./config/wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    depends_on:
+      - mysql
+    links:
+      - mysql
+  mysql:
+    image: mariadb
+    ports:
+      - 3306:3306
+    env_file:
+      - ./config/mysql/dev.env
+  phpmyadmin:
+    image: corbinu/docker-phpmyadmin
+    links:
+      - mysql
+    ports:
+      - 8181:80
+    depends_on:
+      - mysql
